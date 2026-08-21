@@ -1,14 +1,17 @@
-// MADE BY M3TOZZ
-// https://github.com/m3tozz/telari
+// Bu yazılım yalnızca eğitim amaçlı kullanım içindir.
+// Geliştirici (m3tozz), yazılımın kötüye kullanımı, yasa dışı faaliyetleri veya kullanımından kaynaklanan istenmeyen sonuçlardan sorumlu değildir.
+// Lütfen etik ve sorumlu bir şekilde kullanın.
 
 package main
 
 import (
+	"bufio"
 	"bytes"
 	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
+	"os"
 	"strings"
 	"time"
 )
@@ -426,29 +429,80 @@ func (b *Bot) saloon() {
 	fmt.Println("Toplam Başarılı İstek Sayısı:", b.Adet)
 }
 func main() {
-	fmt.Print("\033[36m")
-	fmt.Println(`
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⢀⣴⣿⣿⣷⣮⠀⠀⠀    Telari SMS Bomber
-⠀⠀⠀⠀⠀⠀⠀⣻⣿⣿⣿⣿⣿⠂⠀⠀    by @m3tozzch4rmz
-⠀⠀⠀⠀⠀⠀⣠⣿⣿⣿⣿⣿⠋⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⣾⣿⣿⣿⢸⣧⠁⠀⠀⠀    Bu araç tamamıyla
-⠀⡀⠀⠀⠀⠀⢸⣿⣿⣿⣸⣿⣿⣄⠀⠀    siber güvenlik eğitimi
-⠀⠈⠫⠂⠀⠀⠊⣿⢿⣿⡏⣿⠿⠟⠀⠀    amacıyla yapılmıştır.
-⠀⠀⠀⠀⠱⡀⠀⠁⠀⢝⢷⡸⡇⠀⠀⠀
-⠀⠀⠀⠀⢀⠇⠀⠀⢀⣾⣦⢳⡀⠀⠀⠀    Kullanım sorumluluğu
-⠀⠀⠀⢀⠎⠀⢀⣴⣿⣿⣿⡇⣧⠀⠀⠀    tamamen kullanıcıya aittir.
-⠀⢀⡔⠁⠀⢠⡟⢻⡻⣿⣿⣿⣌⡀⠀⠀
-`)
+	fmt.Print("\033[1;31m")
+	fmt.Println("UYARI VE SORUMLULUK REDDİ:")
+	fmt.Println("Bu yazılım yalnızca eğitim, test ve güvenlik araştırmaları amacıyla geliştirilmiştir.")
+	fmt.Println("Yazılımın yetkisiz veya yasa dışı sistemlerde kullanımı tamamen kullanıcının")
+	fmt.Println("sorumluluğundadır. Geliştirici (m3tozz), doğabilecek doğrudan veya dolaylı")
+	fmt.Println("zararlardan sorumlu tutulamaz.")
 	fmt.Print("\033[0m")
 
-	var numara string
+	fmt.Println()
 
-	fmt.Print("Numara gir (+90 olmadan): ")
-	fmt.Scanln(&numara)
-	bot := Bot{
-		Phone: numara,
+	fmt.Print("Aracı kullanmak ve şartları kabul ettiğinizi belirtmek için 'e' tuşunu girip enter tuşuna basınız  (Çıkış için herhangi bir tuşa basabilirsiniz): ")
+
+	reader := bufio.NewReader(os.Stdin)
+	input, err := reader.ReadString('\n')
+	if err != nil {
+		fmt.Println("\nGirdi okuma hatası oluştu.")
+		return
 	}
 
-	bot.baslat()
+	input = strings.TrimSpace(strings.ToLower(input))
+
+	if input != "e" {
+		fmt.Println("\n[-] Kullanım şartları kabul edilmedi. Program kapatılıyor.")
+		os.Exit(0)
+	}
+	isTermux := false
+	for _, arg := range os.Args[1:] {
+		if arg == "--termux" {
+			isTermux = true
+			break
+		}
+	}
+
+	if isTermux {
+		fmt.Print("\033[36m")
+		fmt.Println(`
+░▀█▀░█▀▀░█░░░█▀█░█▀▄░▀█▀
+░░█░░█▀▀░█░░░█▀█░█▀▄░░█░
+░░▀░░▀▀▀░▀▀▀░▀░▀░▀░▀░▀▀▀
+  SMS Bomber For Türkiye
+`)
+		fmt.Print("\033[0m")
+
+		var numara string
+
+		fmt.Print("Numara gir (+90 olmadan): ")
+		fmt.Scanln(&numara)
+		bot := Bot{
+			Phone: numara,
+		}
+
+		bot.baslat()
+	} else {
+		fmt.Print("\033[36m")
+		fmt.Println(`
+  ▄▄▄▄▄▄▄     ▄▄               
+ █▀▀██▀▀▀▀     ██              
+    ██         ██       ▄    ▀▀
+    ██   ▄█▀█▄ ██ ▄▀▀█▄ ████▄██
+    ██   ██▄█▀ ██ ▄█▀██ ██   ██
+    ▀██▄▄▀█▄▄▄▄██▄▀█▄██▄█▀  ▄██
+		SMS Bomber For Türkiye
+`)
+		fmt.Print("\033[0m")
+
+		var numara string
+
+		fmt.Print("Numara gir (+90 olmadan): ")
+		fmt.Scanln(&numara)
+		bot := Bot{
+			Phone: numara,
+		}
+
+		bot.baslat()
+	}
+
 }
